@@ -3,9 +3,9 @@ module ListaZipper where
 import qualified Data.Maybe as Maybe
 import qualified Data.Set as Set
 
-data Node a = Node { value :: a, next :: Maybe (Node a) } deriving (Show, Eq, Ord)
+data Node a = Node { value :: a, next :: Maybe (Node a) } deriving (Show, Read, Eq, Ord)
 
-data LinkedList a = EmptyList | LinkedList { head :: Node a } deriving (Show, Eq, Ord)
+data LinkedList a = EmptyList | LinkedList { head :: Node a } deriving (Show, Read, Eq, Ord)
 
 insertElement1 :: (Ord a) => a -> LinkedList a -> LinkedList a
 insertElement1 x EmptyList = LinkedList (Node x Nothing)
@@ -39,6 +39,38 @@ deleteElement2 x xs =
     in
         (list, removed)
 
+insertSubList :: (Ord a) => LinkedList a -> LinkedList a -> LinkedList a
+insertSubList xs EmptyList = xs
+insertSubList EmptyList ys = ys
+insertSubList (LinkedList xHead) (LinkedList yHead) =
+    case xNextNode of Just n  -> insertSubList (LinkedList n) yModList
+                      Nothing -> insertSubList EmptyList yModList
+    where
+        xNextNode = getNextNode xHead
+        xNodeValue = getNodeValue xHead
+        yModList = insertElement1 xNodeValue (LinkedList yHead)
+
+deleteElements :: (Ord a) => LinkedList a -> LinkedList a -> LinkedList a
+deleteElements EmptyList EmptyList = EmptyList
+deleteElements EmptyList _ = EmptyList
+deleteElements xs EmptyList = xs
+deleteElements (LinkedList xHead) (LinkedList yHead) =
+    case yNextNode of Just n  -> deleteElements xClearList (LinkedList n)
+                      Nothing -> deleteElements xClearList EmptyList 
+    where
+        xNextNode = getNextNode xHead
+        yNextNode = getNextNode yHead
+        yNodeValue = getNodeValue yHead
+        xClearList = deleteElement1 yNodeValue (LinkedList xHead)
+
+type LinkedListZipper a = (LinkedList a, Maybe a)
+
+forwardList :: LinkedListZipper a -> LinkedListZipper a
+forwardList = error "not implemented"
+
+backwardList :: LinkedListZipper a -> LinkedListZipper a
+backwardList = error "not implemented"
+
 getListDiff :: (Ord a) => [a] -> [a] -> [a]
 getListDiff xs ys = Set.elems (Set.difference (Set.fromList xs) (Set.fromList ys))
 
@@ -46,7 +78,6 @@ toList :: (Ord a) => LinkedList a -> [a]
 toList EmptyList = []
 toList (LinkedList (Node nodeValue nextNode)) = case nextNode of Nothing -> nodeValue : toList EmptyList
                                                                  Just n  -> nodeValue : toList (LinkedList n)
-
 
 getNextNode :: (Ord a) => Node a -> Maybe (Node a)
 getNextNode (Node _ x) = if Maybe.isNothing x then Nothing else x
