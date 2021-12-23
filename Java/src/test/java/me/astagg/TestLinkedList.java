@@ -161,6 +161,25 @@ public class TestLinkedList {
         list.add(99);
 
         final LinkedList<Integer> reversed = list.reverse();
+        Assertions.assertEquals(list.getSize(), reversed.getSize());
+        Assertions.assertEquals(99, reversed.at(0));
+        Assertions.assertEquals(12, reversed.at(1));
+        Assertions.assertEquals(30, reversed.at(2));
+        Assertions.assertEquals(420, reversed.at(3));
+        Assertions.assertEquals(69, reversed.at(4));
+    }
+
+    @Test
+    public void testReverseRecursive() {
+        final LinkedList<Integer> list = new LinkedList<>();
+        list.add(69);
+        list.add(420);
+        list.add(30);
+        list.add(12);
+        list.add(99);
+
+        final LinkedList<Integer> reversed = list.reverse(list.getHead(), null);
+        Assertions.assertEquals(list.getSize(), reversed.getSize());
         Assertions.assertEquals(99, reversed.at(0));
         Assertions.assertEquals(12, reversed.at(1));
         Assertions.assertEquals(30, reversed.at(2));

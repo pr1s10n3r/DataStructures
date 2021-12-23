@@ -9,6 +9,18 @@ public class Node<T> {
         this.value = value;
     }
 
+    public long children() {
+        long deep = 0;
+        Node<T> index = next;
+
+        while (index != null) {
+            deep++;
+            index = index.getNext();
+        }
+
+        return deep;
+    }
+
     public Node<T> getNext() {
         return next;
     }

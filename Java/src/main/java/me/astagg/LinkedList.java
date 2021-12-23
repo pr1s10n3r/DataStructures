@@ -9,6 +9,17 @@ public class LinkedList<T> {
         this.size = 0;
     }
 
+    public LinkedList(Node<T> head) {
+        if (head == null) {
+            this.head = null;
+            this.size = 0;
+            return;
+        }
+
+        this.head = head;
+        this.size = head.children() + 1;
+    }
+
     public void add(T value) {
         final Node<T> next = new Node<>(null, value);
 
@@ -34,10 +45,6 @@ public class LinkedList<T> {
             throw new ArrayIndexOutOfBoundsException("index is greater than list size or lower than zero");
 
         --size;
-
-//        0 list.add(69);
-//        1 list.add(420);
-//        2 list.add(30);
 
         Node<T> index = head;
         Node<T> prev = index;
@@ -70,6 +77,16 @@ public class LinkedList<T> {
         return value.getValue();
     }
 
+    public LinkedList<T> reverse(Node<T> head, Node<T> acc) {
+        if (head == null)
+            return new LinkedList<>(acc);
+
+        final Node<T> next = head.getNext();
+        head.setNext(acc);
+
+        return reverse(next, head);
+    }
+
     public LinkedList<T> reverse() {
         final LinkedList<T> reversed = new LinkedList<>();
         if (size == 0) {
@@ -93,23 +110,11 @@ public class LinkedList<T> {
         return reversed;
     }
 
-    public boolean isEmpty() {
-        return (size == 0);
-    }
-
     public Node<T> getHead() {
         return head;
     }
 
-    public void setHead(Node<T> head) {
-        this.head = head;
-    }
-
     public long getSize() {
         return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
     }
 }
